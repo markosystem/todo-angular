@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Todo } from 'src/model/todo.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FlashMessagesService } from 'angular2-flash-messages';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +13,9 @@ export class AppComponent {
   public todos: Todo[] = [];
   public form: FormGroup;
   public entity: Todo;
+  public mode = 'list';
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private flashMessage: FlashMessagesService) {
     this.form = this.fb.group({
       description: ['', Validators.compose([
         Validators.minLength(3),
@@ -22,19 +24,23 @@ export class AppComponent {
       ])]
     });
     this.load();
+  }
 
-    /*     this.todos.push(new Todo(1, 'Tarefa Registrada', false));
-        this.todos.push(new Todo(2, 'Tarefa Registrada', true));
-        this.todos.push(new Todo(3, 'Tarefa Registrada', true));
-        this.todos.push(new Todo(4, 'Tarefa Registrada', false)); */
+  showMessageFlash(msg: string, type: string) {
+    this.flashMessage.show(msg, { cssClass: type, timeout: 2000 });
   }
 
   adiciona() {
-    const id = this.todos.length + 1;
     const description = this.form.controls['description'].value;
-    this.todos.push(new Todo(id, description, false));
+    this.todos.push(new Todo(this.generateId(), description, false));
     this.save();
     this.clear();
+    this.showMessageFlash('Tarefa adicionada com sucesso!', 'alert-success');
+  }
+
+  generateId() {
+    const id = this.todos.reduce((max, character) => (character.id > max ? character.id : max), this.todos[0] ? this.todos[0].id : 0)
+    return Number(id) + 1;
   }
 
   clear() {
@@ -46,26 +52,40 @@ export class AppComponent {
     if (index !== -1) {
       this.todos.splice(index, 1);
       this.save();
+      this.showMessageFlash('Tarefa removida com sucesso!', 'alert-success');
     }
   }
 
   markAsDone(todo: Todo) {
     todo.done = true;
     this.save();
+    this.showMessageFlash('Tarefa concluída com sucesso!', 'alert-success');
   }
 
   markAsUndone(todo: Todo) {
     todo.done = false;
     this.save();
+    this.showMessageFlash('Tarefa reaberta com sucesso!', 'alert-success');
   }
 
   save() {
     const data = JSON.stringify(this.todos);
     localStorage.setItem('todos', data);
+    this.changeMode('list');
   }
 
   load() {
     const data = localStorage.getItem('todos');
     this.todos = data ? JSON.parse(data) : [];
+  }
+
+  changeMode(mode: string) {
+    this.mode = mode;
+  }
+
+  removelAll() {
+    localStorage.removeItem('todos');
+    this.load();
+    this.showMessageFlash('Tarefas removidos com sucesso!', 'alert-success');
   }
 }

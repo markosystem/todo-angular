@@ -283,3 +283,42 @@ svg#clouds {
     visibility: hidden;
   }
 }
+
+.container-form{
+  width: 45% !important;
+}
+
+.formTarefa{
+  width: 100% !important;
+}
+
+.danger{
+  color: red;
+  font-weight: bold;
+}
+
+.table-angular{
+  width: 60% !important;
+  padding: 1.5rem !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  border-width: .2rem !important;
+}
+
+.table-angular > .buttons-angular{
+  text-align: center !important;
+  width: 100% !important;
+}
+
+flash-messages{
+  width: 40% !important;
+  position:absolute;
+  z-index:100;
+  top:20%;
+  left:40;
+}
+
+.done{
+  text-decoration: line-through;
+}
+
