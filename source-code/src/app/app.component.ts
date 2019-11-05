@@ -41,13 +41,15 @@ export class AppComponent {
 
   add() {
     if (this.form.invalid) {
-      this.showMessageFlash('Formulário não válido!', 'alert-danger');
+      this.showMessageFlash('Atenção! Todos os campos são obrigatórios.', 'alert-danger');
       return;
     }
-    this.repository.add(this.produceObject());
+    const objectSave = this.produceObject();
+    const id = objectSave.id;
+    this.repository.add(objectSave);
     this.changeMode('list');
     this.form.reset();
-    this.showMessageFlash('Tarefa adicionada com sucesso!', 'alert-success');
+    this.showMessageFlash('Tarefa ' + (id === -1 ? 'adicionada' : 'atualizada') + ' com sucesso!', 'alert-success');
     this.init();
   }
 
@@ -77,11 +79,14 @@ export class AppComponent {
     this.repository.deleteAll();
     this.repository.load();
     this.changeMode('list');
-    this.showMessageFlash('Tarefas removidos com sucesso!', 'alert-success');
+    this.showMessageFlash('Tarefas removidas com sucesso!', 'alert-success');
     this.init();
   }
 
   changeMode(mode: string) {
+    if (mode === 'add') {
+      this.form.reset();
+    }
     this.mode = mode;
   }
 

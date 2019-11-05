@@ -60,7 +60,7 @@
 
   <!-- botões de ações -->
   <div class="buttons-angular">
-      <button (click)="removelAll()" *ngIf="todos.length > 0" class="btn btn-danger btn-sm">
+      <button (click)="removelAll()" *ngIf="todos.length > 0" class="btn btn-dark btn-sm">
         <i class="fas fa-trash-alt"></i>
         Apagar Todas
       </button>
@@ -122,11 +122,11 @@
         <div class="form-group">
           <label>Status da Tarefa</label>
           <div class="form-check">
-            <input class="form-check-input" type="radio" id="realizada" name="done" [value]=true formControlName="done"> -
+            <input class="form-check-input" type="radio" id="realizada" name="done" [value]=true formControlName="done">-
             <label class="form-check-label" for="realizada">Realizada</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" id="realizar" name="done" [value]=false formControlName="done"> -
+            <input class="form-check-input" type="radio" id="realizar" name="done" [value]=false formControlName="done">-
             <label class="form-check-label" for="realizar">A realizar</label>
           </div>
         </div>
