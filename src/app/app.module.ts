@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { FlashMessagesModule } from 'angular2-flash-messages';
 import { DatePipe } from '@angular/common';
 
+
 @NgModule({
   declarations: [
     AppComponent

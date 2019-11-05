@@ -72,10 +72,6 @@
         <i class="fa fa-plus" aria-hidden="true"></i>
         Nova
       </button>
-      <button (click)="changeMode('list')" class="btn btn-danger btn-sm" *ngIf="mode === 'add'">
-        <i class="fa fa-ban" aria-hidden="true"></i>
-        Cancelar
-      </button>
       <button (click)="removelAll()" *ngIf="todos.length > 0" class="btn btn-dark btn-sm">
         <i class="fas fa-trash-alt"></i>
         Limpar
@@ -95,8 +91,8 @@
         </thead>
         <tbody>
           <tr *ngIf="todos.length == 0">
-            <td colspan=3>
-              <small>Nenhuma tarefa registrada!</small>
+            <td colspan="4">
+              <p>Nenhuma tarefa registrada!</p>
             </td>
           </tr>
           <tr *ngFor="let to of todos">
@@ -125,7 +121,7 @@
     <div class="container-form mx-auto" *ngIf="mode == 'add'">
       <form [formGroup]="form" class="formTarefa">
         <div class="form-group">
-          <label for="nomeTarefa">Nome da Tarefa</label>
+          <label for="nomeTarefa" class="font-weight-bold">Nome da Tarefa</label>
           <input type="hidden" formControlName="id" class="form-control">
           <input type="text" formControlName="description" class="form-control" placeholder="Informe a Tarefa!"
             id="nomeTarefa">
@@ -133,7 +129,7 @@
             campo deve conter entre 3 a 40 caracteres!</small>
         </div>
         <div class="form-group">
-          <label>Status da Tarefa</label>
+          <label class="font-weight-bold">Status da Tarefa</label>
           <div class="form-check">
             <input class="form-check-input" type="radio" id="realizada" name="done" [value]=true
               formControlName="done">-
@@ -145,10 +141,14 @@
             <label class="form-check-label" for="realizar">A realizar</label>
           </div>
         </div>
-        <div class="button-save">
-          <button (click)="add()" class="btn btn-success btn-sm">
-            <i class="fas fa-save"></i>
-            Salvar
+        <div class="buttons">
+            <button (click)="add()" class="btn btn-success btn-sm">
+              <i class="fas fa-save"></i>
+              Salvar
+            </button>
+          <button (click)="changeMode('list')" class="btn btn-danger btn-sm" *ngIf="mode === 'add'">
+            <i class="fa fa-ban" aria-hidden="true"></i>
+            Cancelar
           </button>
         </div>
       </form>
@@ -156,9 +156,9 @@
   </div>
 
   <!-- Modal -->
-
   <!-- Botão para acionar modal -->
-  <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo">
+  <!--
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo">
     Abrir modal de demonstração
   </button>
 

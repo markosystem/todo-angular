@@ -285,7 +285,7 @@ svg#clouds {
 }
 
 .container-form{
-  width: 45% !important;
+  width: 100% !important;
 }
 
 .formTarefa{
@@ -309,7 +309,7 @@ svg#clouds {
   text-align: right !important;
 }
 
-.button-save{
+.buttons{
   text-align: center !important;
   font-weight: bold;
 }
