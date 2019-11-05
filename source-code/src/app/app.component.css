@@ -306,9 +306,12 @@ svg#clouds {
 }
 
 .buttons-angular{
-  width: 60% !important;
-  display: inline-flex;
-  flex-direction: row-reverse;
+  text-align: right !important;
+}
+
+.button-save{
+  text-align: center !important;
+  font-weight: bold;
 }
 
 flash-messages{

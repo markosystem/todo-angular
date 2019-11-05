@@ -3,6 +3,7 @@ import { Todo } from 'src/model/todo.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { TodoRepository } from 'src/repository/todo.repository';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,7 @@ export class AppComponent {
   public mode = 'list';
   public repository = new TodoRepository();
 
-  constructor(private fb: FormBuilder, private flashMessage: FlashMessagesService) {
+  constructor(private fb: FormBuilder, private flashMessage: FlashMessagesService, public datepipe: DatePipe) {
     this.loadValidators();
     this.init();
   }
@@ -39,9 +40,21 @@ export class AppComponent {
     });
   }
 
-  add() {
+  isValid() {
     if (this.form.invalid) {
-      this.showMessageFlash('Atenção! Todos os campos são obrigatórios.', 'alert-danger');
+      this.showMessageFlash('Todos os campos são obrigatórios.', 'alert-danger');
+      return false;
+    }
+    const description = this.form.controls['description'].value;
+    if (this.todos.filter(todo => todo.description.toLocaleLowerCase() === description.toLocaleLowerCase())[0]) {
+      this.showMessageFlash(`A Tarefa "${description}" já foi informada!`, 'alert-danger');
+      return false;
+    }
+    return true;
+  }
+
+  add() {
+    if (!this.isValid()) {
       return;
     }
     const objectSave = this.produceObject();
@@ -94,7 +107,7 @@ export class AppComponent {
     const id = this.form.controls['id'].value ? this.form.controls['id'].value : -1;
     const description = this.form.controls['description'].value;
     const done = this.form.controls['done'].value === true;
-    return new Todo(id, description, done);
+    return new Todo(id, description, done, new Date());
   }
 
   setDataForm(todo: Todo) {
