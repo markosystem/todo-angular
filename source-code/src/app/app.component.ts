@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Todo } from 'src/model/todo.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FlashMessagesService } from 'angular2-flash-messages';
+import { TodoRepository } from 'src/repository/todo.repository';
 
 @Component({
   selector: 'app-root',
@@ -12,80 +13,93 @@ export class AppComponent {
   public title = 'Minhas Tarefas';
   public todos: Todo[] = [];
   public form: FormGroup;
-  public entity: Todo;
   public mode = 'list';
+  public repository = new TodoRepository();
 
   constructor(private fb: FormBuilder, private flashMessage: FlashMessagesService) {
+    this.loadValidators();
+    this.init();
+  }
+
+  init() {
+    this.todos = this.repository.load();
+  }
+
+  loadValidators() {
     this.form = this.fb.group({
+      id: [''],
       description: ['', Validators.compose([
         Validators.minLength(3),
         Validators.maxLength(40),
         Validators.required,
+      ])],
+      done: ['', Validators.compose([
+        Validators.required,
       ])]
     });
-    this.load();
   }
 
-  showMessageFlash(msg: string, type: string) {
-    this.flashMessage.show(msg, { cssClass: type, timeout: 2000 });
-  }
-
-  adiciona() {
-    const description = this.form.controls['description'].value;
-    this.todos.push(new Todo(this.generateId(), description, false));
-    this.save();
-    this.clear();
-    this.showMessageFlash('Tarefa adicionada com sucesso!', 'alert-success');
-  }
-
-  generateId() {
-    const id = this.todos.reduce((max, character) => (character.id > max ? character.id : max), this.todos[0] ? this.todos[0].id : 0)
-    return Number(id) + 1;
-  }
-
-  clear() {
+  add() {
+    if (this.form.invalid) {
+      this.showMessageFlash('Formulário não válido!', 'alert-danger');
+      return;
+    }
+    this.repository.add(this.produceObject());
+    this.changeMode('list');
     this.form.reset();
+    this.showMessageFlash('Tarefa adicionada com sucesso!', 'alert-success');
+    this.init();
   }
 
   remove(todo: Todo) {
-    const index = this.todos.indexOf(todo);
-    if (index !== -1) {
-      this.todos.splice(index, 1);
-      this.save();
-      this.showMessageFlash('Tarefa removida com sucesso!', 'alert-success');
-    }
+    this.repository.delete(todo);
+    this.showMessageFlash('Tarefa removida com sucesso!', 'alert-success');
+    this.init();
   }
 
   markAsDone(todo: Todo) {
     todo.done = true;
-    this.save();
+    this.repository.save();
     this.showMessageFlash('Tarefa concluída com sucesso!', 'alert-success');
+    this.changeMode('list');
+    this.init();
   }
 
   markAsUndone(todo: Todo) {
     todo.done = false;
-    this.save();
+    this.repository.save();
     this.showMessageFlash('Tarefa reaberta com sucesso!', 'alert-success');
-  }
-
-  save() {
-    const data = JSON.stringify(this.todos);
-    localStorage.setItem('todos', data);
     this.changeMode('list');
+    this.init();
   }
 
-  load() {
-    const data = localStorage.getItem('todos');
-    this.todos = data ? JSON.parse(data) : [];
+  removelAll() {
+    this.repository.deleteAll();
+    this.repository.load();
+    this.changeMode('list');
+    this.showMessageFlash('Tarefas removidos com sucesso!', 'alert-success');
+    this.init();
   }
 
   changeMode(mode: string) {
     this.mode = mode;
   }
 
-  removelAll() {
-    localStorage.removeItem('todos');
-    this.load();
-    this.showMessageFlash('Tarefas removidos com sucesso!', 'alert-success');
+  produceObject() {
+    const id = this.form.controls['id'].value ? this.form.controls['id'].value : -1;
+    const description = this.form.controls['description'].value;
+    const done = this.form.controls['done'].value === true;
+    return new Todo(id, description, done);
+  }
+
+  setDataForm(todo: Todo) {
+    this.changeMode('add');
+    this.form.controls['id'].setValue(todo.id);
+    this.form.controls['description'].setValue(todo.description);
+    this.form.controls['done'].setValue(todo.done);
+  }
+
+  showMessageFlash(msg: string, type: string) {
+    this.flashMessage.show(msg, { cssClass: type, timeout: 2000 });
   }
 }

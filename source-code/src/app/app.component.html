@@ -1,5 +1,3 @@
-<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <!-- Toolbar -->
 <div class="toolbar" role="banner">
   <img
@@ -63,7 +61,7 @@
   <!-- botões de ações -->
   <div class="buttons-angular">
       <button (click)="removelAll()" *ngIf="todos.length > 0" class="btn btn-danger btn-sm">
-        <i class="fa fa-trash-o" aria-hidden="true"></i>
+        <i class="fas fa-trash-alt"></i>
         Apagar Todas
       </button>
       <div *ngIf="mode === 'list'">
@@ -82,7 +80,7 @@
 
   <!-- tabela de apresentação dos botões -->
   <div class="table-angular" *ngIf="mode == 'list'">
-    <table class="table table-sm">
+    <table class="table table-bordered table-sm">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -102,9 +100,10 @@
               {{to.description}}
             </td>
             <td>
-              <button (click)="markAsDone(to)" *ngIf="!to.done" class="btn btn-default btn-sm"><i class="fa fa-square-o" aria-hidden="true"></i></button>
-              <button (click)="markAsUndone(to)" *ngIf="to.done" class="btn btn-default btn-sm"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
-              <button (click)="remove(to)" class="btn btn-default btn-sm"><i class="fa fa-times" aria-hidden="true"></i></button>
+              <button (click)="markAsDone(to)" *ngIf="!to.done" class="btn btn-default btn-sm"><i class="fa fa-square-o"></i></button>
+              <button (click)="markAsUndone(to)" *ngIf="to.done" class="btn btn-default btn-sm"><i class="fa fa-check-square-o"></i></button>
+              <button (click)="setDataForm(to)" class="btn btn-default btn-sm"><i class="fa fa-edit"></i></button>
+              <button (click)="remove(to)" type="button" class="btn btn-default btn-sm"><i class="fa fa-times"></i></button>
             </td>
           </tr>
         </tbody>
@@ -115,14 +114,27 @@
   <div class="container-form" *ngIf="mode == 'add'">
     <form [formGroup]="form" class="formTarefa">
         <div class="form-group">
-          <label>Nome da Tarefa</label>
-          <input type="text" formControlName="description" class="form-control" placeholder="Informe a Tarefa!" id="tarefa">
-          <small class="danger" *ngIf="form.controls.description.invalid && !form.controls.description.pristine">Este campo deve conter entre 3 a 40 caracteres!</small>
+          <label for="nomeTarefa">Nome da Tarefa</label>
+            <input type="hidden" formControlName="id" class="form-control">
+            <input type="text" formControlName="description" class="form-control" placeholder="Informe a Tarefa!" id="nomeTarefa">
+            <small class="danger" *ngIf='form.controls.description.invalid && !form.controls.description.pristine'>Este campo deve conter entre 3 a 40 caracteres!</small>
+        </div>
+        <div class="form-group">
+          <label>Status da Tarefa</label>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="realizada" name="done" [value]=true formControlName="done"> -
+            <label class="form-check-label" for="realizada">Realizada</label>
           </div>
-          <button (click)="adiciona()" [disabled]="form.invalid" class="btn btn-success btn-sm">
-            <i class="fa fa-floppy-o" aria-hidden="true"></i>
-            Salvar
-          </button>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="realizar" name="done" [value]=false formControlName="done"> -
+            <label class="form-check-label" for="realizar">A realizar</label>
+          </div>
+        </div>
+
+        <button (click)="add()" class="btn btn-success btn-sm">
+          <i class="fas fa-save"></i>
+          Salvar
+        </button>
     </form>
   </div>
 
