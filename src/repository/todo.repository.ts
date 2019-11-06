@@ -24,9 +24,7 @@ export class TodoRepository {
   }
 
   public delete(todo: Todo) {
-    console.log('deletando => ' + todo.toString());
     const index = this.todos.indexOf(todo);
-    console.log('indice deletado => ', index);
     if (index !== -1) {
       this.todos.splice(index, 1);
       this.save();

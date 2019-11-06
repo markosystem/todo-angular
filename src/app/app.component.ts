@@ -46,7 +46,6 @@ export class AppComponent {
       return false;
     }
     const id = this.form.controls['id'].value;
-    alert('id =>' + id);
     const description = this.form.controls['description'].value;
     if (this.todos.filter(todo => id === null && todo.description.toLocaleLowerCase() === description.toLocaleLowerCase())[0]) {
       this.showMessageFlash(`A Tarefa "${description}" já foi informada!`, 'alert-danger');
